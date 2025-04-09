@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Management Service</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>URL Management Service</h1>
+    </header>
+    <main>
+        <section id="add-link">
+            <h2>Add New Link</h2>
+            <form id="add-link-form">
+                <label for="primary-link">Primary Link:</label>
+                <input type="url" id="primary-link" name="primary-link" required>
+                
+                <label for="expiration-link">Expiration Link:</label>
+                <input type="url" id="expiration-link" name="expiration-link" required>
+                
+                <label for="expiration-date">Expiration Date:</label>
+                <input type="date" id="expiration-date" name="expiration-date" required>
+                
+                <button type="submit">Add Link</button>
+            </form>
+        </section>
+        <section id="manage-links">
+            <h2>Manage Links</h2>
+            <ul id="link-list">
+                <!-- Links will be dynamically loaded here -->
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 URL Management Service</p>
+    </footer>
+</body>
+</html>
