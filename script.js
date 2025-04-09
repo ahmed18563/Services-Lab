@@ -1,6 +1,11 @@
+const API_URL = "https://script.google.com/macros/s/AKfycbwQJKthx3vw32XFTsFPuJEVBznq6RHtCZmE2ba7fe6B45Vs5iLzkS41QILZYQLhvA_wiw/exec";
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("add-link-form");
     const linkList = document.getElementById("link-list");
+
+    // Fetch and display existing links
+    fetchLinks();
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -8,16 +13,54 @@ document.addEventListener("DOMContentLoaded", () => {
         const expirationLink = document.getElementById("expiration-link").value;
         const expirationDate = document.getElementById("expiration-date").value;
 
-        // TODO: Implement API call to add the link to Google Sheets
-        console.log("Adding link:", { primaryLink, expirationLink, expirationDate });
+        const newLink = {
+            primaryLink: primaryLink,
+            expirationLink: expirationLink,
+            expirationDate: expirationDate
+        };
 
-        // Add the new link to the list for now
-        const listItem = document.createElement("li");
-        listItem.textContent = `Primary: ${primaryLink}, Expiration: ${expirationLink}, Date: ${expirationDate}`;
-        linkList.appendChild(listItem);
+        try {
+            // Add link via API
+            const response = await fetch(API_URL + "?action=addLink", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newLink)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert("Link added successfully!");
+                fetchLinks(); // Refresh link list
+            } else {
+                throw new Error("Failed to add link");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Error adding link. Please try again.");
+        }
 
         form.reset();
     });
 
-    // TODO: Fetch and display existing links
+    async function fetchLinks() {
+        try {
+            const response = await fetch(API_URL + "?action=getLinks");
+            const data = await response.json();
+
+            // Clear existing links
+            linkList.innerHTML = "";
+
+            // Populate links
+            data.links.forEach((link) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `Primary: ${link.primaryLink}, Expiration: ${link.expirationLink}, Date: ${link.expirationDate}`;
+                linkList.appendChild(listItem);
+            });
+        } catch (error) {
+            console.error(error);
+            alert("Error fetching links. Please try again.");
+        }
+    }
 });
